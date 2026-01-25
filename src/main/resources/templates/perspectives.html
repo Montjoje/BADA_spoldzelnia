@@ -1,11 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
-    <title>Spring Boot App</title>
+    <meta charset="UTF-8"/>
+    <title>Perspektywy użytkowników</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css} "/>
 </head>
-<body>
-<h1>Welcome to the Perspectives page. However, you will never see it because you will be automatically
-    redirected after successful log in.</h1>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h4 mb-3">Wybór perspektywy użytkownika</h1>
+                    <p class="text-muted">
+                        Po zalogowaniu system automatycznie przekieruje Cię do odpowiedniego panelu.
+                        Poniżej znajduje się opis dostępnych perspektyw, abyś wiedział, czego się spodziewać.
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Mieszkaniec</h2>
+                                <ul class="mb-0">
+                                    <li>podgląd danych osobowych i lokalu,</li>
+                                    <li>edycja danych kontaktowych,</li>
+                                    <li>bezpieczne wylogowanie.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h2 class="h6">Administrator</h2>
+                                <ul class="mb-0">
+                                    <li>pełny CRUD na danych spółdzielni,</li>
+                                    <li>zarządzanie budynkami, klatkami i lokalami,</li>
+                                    <li>obsługa mieszkańców i ich danych.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a class="btn btn-primary" th:href="@{/login}">Przejdź do logowania</a>
+                        <a class="btn btn-outline-secondary" th:href="@{/index}">Wróć na stronę główną</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

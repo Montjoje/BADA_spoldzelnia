@@ -70,7 +70,7 @@ public class AppController implements WebMvcConfigurer {
                 adresEmail
         );
 
-        return "redirect:/user/user_main";
+        return "redirect:/user/user_main?updated=true";
     }
 
     @RequestMapping(value = {"/admin/spoldzielnie"})
