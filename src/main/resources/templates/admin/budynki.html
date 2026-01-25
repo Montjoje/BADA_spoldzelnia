@@ -4,7 +4,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8"/>
-    <title>Budynki</title>
+    <title>Budynki | Panel administratora</title>
     <link th:rel="stylesheet"
           th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css} "/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
@@ -16,10 +16,10 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-        <a class="navbar-brand" href="/">Spring Boot projekt - część II</a>
-
+        <a class="navbar-brand" href="/">Panel spółdzielni mieszkaniowej</a>
+        <a class="navbar-text text-white ms-3" th:href="@{/admin/admin_main}">Panel administratora</a>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
                     <span class="nav-link">
                         Zalogowany jako
@@ -39,108 +39,138 @@
     </div>
 </nav>
 
-<div class="table-responsive">
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-9">
+            <h1 class="h4 mb-1">Budynki</h1>
+            <p class="text-muted mb-3">
+                Poniżej znajduje się lista budynków przypisanych do spółdzielni. Możesz edytować dane w wierszu
+                i zapisać zmiany lub usunąć rekord.
+            </p>
+        </div>
+        <div class="col-lg-3 text-lg-end">
+            <a class="btn btn-outline-secondary btn-sm" href="/admin/admin_main">Wróć do panelu</a>
+        </div>
+    </div>
 
-    <!-- TABLE -->
-    <label style="font-size:25px">
-        <b>Budynki</b>
-    </label>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Nr budynku</th>
+                        <th>Liczba pięter</th>
+                        <th>Nr spółdzielni</th>
+                        <th>Nr adresu</th>
+                        <th>Miasto</th>
+                        <th>Ulica</th>
+                        <th>Nr budynku</th>
+                        <th>Nr lokalu</th>
+                        <th>Kod pocztowy</th>
+                        <th class="text-end">Akcje</th>
+                    </tr>
+                    </thead>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nr budynku</th>
-            <th>Liczba pięter</th>
-            <th>Numer spółdzielni</th>
-            <th>Numer adresu</th>
-            <th>Miasto</th>
-            <th>Ulica</th>
-            <th>Numer budynku</th>
-            <th>Numer lokalu</th>
-            <th>Kod pocztowy</th>
-            <th colspan="2">Akcje</th>
-        </tr>
-        </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(budynkiList)}">
+                        <td colspan="10" class="text-center text-muted py-4">
+                            Brak danych do wyświetlenia.
+                        </td>
+                    </tr>
+                    <tr th:each="sp : ${budynkiList}">
+                        <form th:action="@{/admin/budynki/updateBudynki}" th:object="${sp}" method="post">
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="nrBudynku"
+                                       th:value="${sp.nrBudynku}" readonly/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="number" name="liczbaPieter"
+                                       min="0" th:value="${sp.liczbaPieter}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="number" name="nrSpoldzielni"
+                                       min="0" th:value="${sp.nrSpoldzielni}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="numerAdresu"
+                                       th:value="${sp.numerAdresu}" readonly/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="miasto"
+                                       th:value="${sp.miasto}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="ulica"
+                                       th:value="${sp.ulica}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="numerBudynku"
+                                       th:value="${sp.numerBudynku}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="numerLokalu"
+                                       th:value="${sp.numerLokalu}"/>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm" type="text" name="kodPocztowy"
+                                       th:value="${sp.kodPocztowy}"/>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-primary btn-sm" type="submit">Zapisz</button>
+                                <a class="btn btn-outline-danger btn-sm"
+                                   th:href="@{'/admin/budynki/deleteBudynki/' + ${sp.nrBudynku}}">Usuń</a>
+                            </td>
+                        </form>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        <tbody>
-        <tr th:each="sp : ${budynkiList}">
-            <form th:action="@{/admin/budynki/updateBudynki}" th:object="${sp}" method="post">
-                <td><label>
-                    <input type="text" name="nrBudynku" th:value="${sp.nrBudynku}" readonly/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="liczbaPieter" th:value="${sp.liczbaPieter}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="nrSpoldzielni" th:value="${sp.nrSpoldzielni}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="numerAdresu" th:value="${sp.numerAdresu}" readonly/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="miasto" th:value="${sp.miasto}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="ulica" th:value="${sp.ulica}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="numerBudynku" th:value="${sp.numerBudynku}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="numerLokalu" th:value="${sp.numerLokalu}"/>
-                </label></td>
-                <td><label>
-                    <input type="text" name="kodPocztowy" th:value="${sp.kodPocztowy}"/>
-                </label></td>
-                <td>
-                    <button class="btn btn-primary" type="submit">Zapisz</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="btn btn-danger" th:href="@{'/admin/budynki/deleteBudynki/' + ${sp.nrBudynku}}">Usuń</a>
-                </td>
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h2 class="h6 mb-0">Dodaj nowy budynek</h2>
+        </div>
+        <div class="card-body">
+            <form action="/" th:action="@{/admin/budynki/saveBudynki}" th:object="${budynki}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Liczba pięter</label>
+                        <input type="number" class="form-control" th:field="*{liczbaPieter}" min="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Numer spółdzielni</label>
+                        <input type="number" class="form-control" th:field="*{nrSpoldzielni}" min="0" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Miasto</label>
+                        <input type="text" class="form-control" th:field="*{miasto}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Ulica</label>
+                        <input type="text" class="form-control" th:field="*{ulica}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Numer budynku</label>
+                        <input type="text" class="form-control" th:field="*{numerBudynku}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Numer lokalu</label>
+                        <input type="text" class="form-control" th:field="*{numerLokalu}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Kod pocztowy</label>
+                        <input type="text" class="form-control" th:field="*{kodPocztowy}" maxlength="6">
+                    </div>
+                </div>
+                <div class="mt-3 text-end">
+                    <button class="btn btn-success" type="submit">Dodaj budynek</button>
+                </div>
             </form>
-        </tr>
-        </tbody>
-    </table>
-
-    <form action="/" th:action="@{/admin/budynki/saveBudynki}" th:object="${budynki}" method="post">
-        <!-- Table -->
-        <table class="table">
-            <tr>
-                <td>Liczba pięter</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{liczbaPieter}">
-                </label></td>
-                <td>Numer spółdzielni</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{nrSpoldzielni}">
-                </label></td>
-                <td>Miasto</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{miasto}">
-                </label></td>
-                <td>Ulica</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{ulica}">
-                </label></td>
-                <td>Numer budynku</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{numerBudynku}">
-                </label></td>
-                <td>Numer lokalu</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{numerLokalu}">
-                </label></td>
-                <td>Kod pocztowy</td>
-                <td><label>
-                    <input type="text" size="10" class="narrow-font" th:field="*{kodPocztowy}" maxlength="6">
-                </label></td>
-                <td colspan="2">
-                    <button class="btn btn-primary" type="submit">Dodaj</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+        </div>
+    </div>
 </div>
-<a href="/admin/admin_main">Strona admina</a>
 </body>
 </html>
