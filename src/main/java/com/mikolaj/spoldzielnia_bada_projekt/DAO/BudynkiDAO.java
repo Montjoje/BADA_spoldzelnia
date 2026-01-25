@@ -20,7 +20,11 @@ public class BudynkiDAO {
     }
 
     public List<Budynki> list() {
-        String sql = "SELECT b.nr_budynku, b.liczba_pieter, b.nr_spoldzielni, b.numer_adresu, a.miasto, a.ulica, a.numer_budynku, a.numer_lokalu, a.kod_pocztowy FROM budynki b INNER JOIN adresy a ON b.numer_adresu = a.numer_adresu";
+        String sql = "SELECT b.nr_budynku, b.liczba_pieter, b.nr_spoldzielni, " +
+                "b.nr_adresu AS numer_adresu, a.miasto, a.ulica, a.numer_budynku, " +
+                "a.numer_lokalu, a.kod_pocztowy " +
+                "FROM budynki b " +
+                "INNER JOIN adresy a ON b.nr_adresu = a.numer_adresu";
         List<Budynki> BudynkiList = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Budynki.class));
         return BudynkiList;
     }
@@ -34,16 +38,19 @@ public class BudynkiDAO {
         insertActorAdresy.withTableName("adresy").usingColumns( "numer_adresu", "miasto", "ulica", "numer_budynku", "numer_lokalu", "kod_pocztowy");
         BeanPropertySqlParameterSource paramAdresy = new BeanPropertySqlParameterSource(budynki);
         insertActorAdresy.execute(paramAdresy);
-        SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate);
-        insertActor.withTableName("budynki").usingColumns("liczba_pieter", "nr_spoldzielni", "numer_adresu");
-        BeanPropertySqlParameterSource param = new BeanPropertySqlParameterSource(budynki);
-        insertActor.execute(param);
+        String insertBudynek = "INSERT INTO budynki (liczba_pieter, nr_spoldzielni, nr_adresu) VALUES (?, ?, ?)";
+        jdbcTemplate.update(
+                insertBudynek,
+                budynki.getLiczbaPieter(),
+                budynki.getNrSpoldzielni(),
+                budynki.getNumerAdresu()
+        );
 
     }
 
 
     public void update(Budynki b) {
-        String sql = "UPDATE budynki SET " + "liczba_pieter = ?, " + "nr_spoldzielni = ?, " + "numer_adresu = ?" + " WHERE nr_budynku = ?";
+        String sql = "UPDATE budynki SET " + "liczba_pieter = ?, " + "nr_spoldzielni = ?, " + "nr_adresu = ?" + " WHERE nr_budynku = ?";
 
         jdbcTemplate.update(sql, b.getLiczbaPieter(), b.getNrSpoldzielni(), b.getNumerAdresu(), b.getNrBudynku());
 
@@ -54,7 +61,7 @@ public class BudynkiDAO {
     }
 
     public void delete(int nrBudynku) {
-        String search = "SELECT numer_adresu FROM budynki WHERE nr_budynku = ?";
+        String search = "SELECT nr_adresu FROM budynki WHERE nr_budynku = ?";
         int numerAdresu = jdbcTemplate.queryForObject(search, Integer.class, nrBudynku);
         String sqla = "DELETE FROM adresy WHERE numer_adresu = ?";
         String sql = "DELETE FROM budynki WHERE nr_budynku = ?";
