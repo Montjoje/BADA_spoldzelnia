@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lokale</title>
+    <link th:rel="stylesheet"
+          th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css} "/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Spring Boot projekt - część II</a>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <span class="nav-link">
+                        Zalogowany jako
+                        <b style="color:lightskyblue"
+                           sec:authentication="principal.username"></b>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-link nav-link" type="submit">
+                            Wyloguj się
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="table-responsive">
+
+    <!-- TABLE -->
+    <label style="font-size:25px">
+        <b>Lokale</b>
+    </label>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Numer lokalu</th>
+            <th>Numer w budynku</th>
+            <th>Metraż</th>
+            <th>Liczba pokoi</th>
+            <th>Numer piętra</th>
+            <th>Numer klatki (FK)</th>
+            <th colspan="2">Akcje</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="sp : ${lokaleList}">
+            <form th:action="@{/admin/lokale/updateLokale}" th:object="${sp}" method="post">
+                <td><label>
+                    <input type="text" name="nrLokalu" th:value="${sp.nrLokalu}" readonly/>
+                </label></td>
+                <td><label>
+                    <input type="text" name="numerWBudynku" th:value="${sp.numerWBudynku}"/>
+                </label></td>
+                <td><label>
+                    <input type="text" name="metraz" th:value="${sp.metraz}"/>
+                </label></td>
+                <td><label>
+                    <input type="text" name="liczbaPokoi" th:value="${sp.liczbaPokoi}"/>
+                </label></td>
+                <td><label>
+                    <input type="text" name="nrPietra" th:value="${sp.nrPietra}"/>
+                </label></td>
+                <td><label>
+                    <input type="text" name="nrKlatki" th:value="${sp.nrKlatki}"/>
+                </label></td>
+                <td>
+                    <button class="btn btn-primary" type="submit">Zapisz</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-danger" th:href="@{'/admin/lokale/deleteLokale/' + ${sp.nrLokalu}}">Usuń</a>
+                </td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<form action="/" th:action="@{/admin/lokale/saveLokale}" th:object="${lokale}" method="post">
+    <!-- Table -->
+    <table class="table">
+        <tr>
+            <td>Numer w budynku</td>
+            <td><label>
+                <input type="text" size="10" class="narrow-font" th:field="*{numerWBudynku}">
+            </label></td>
+            <td>Metraż</td>
+            <td><label>
+                <input type="text" size="10" class="narrow-font" th:field="*{metraz}">
+            </label></td>
+            <td>Liczba pokoi</td>
+            <td><label>
+                <input type="text" size="10" class="narrow-font" th:field="*{liczbaPokoi}">
+            </label></td>
+            <td>Numer piętra</td>
+            <td><label>
+                <input type="text" size="10" class="narrow-font" th:field="*{nrPietra}">
+            </label></td>
+            <td>Numer klatki</td>
+            <td><label>
+                <input type="text" size="10" class="narrow-font" th:field="*{nrKlatki}">
+            </label></td>
+
+            <td colspan="2">
+                <button class="btn btn-primary" type="submit">Dodaj</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<a href="/admin/admin_main">Strona admina</a>
+</body>
+</html>

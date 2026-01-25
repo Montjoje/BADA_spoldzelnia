@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin Page</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css} "/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Spring Boot projekt - część II</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/index}">Strona główna</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="">Zalogowany jako <b style="color:lightskyblue; text-transform:capitalize"
+                                                                   sec:authentication="principal.username"></b></a>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" th:hidden="true" name="LogoutForm">
+                        <input type="submit" value="Logout"/>
+                    </form>
+                    <a class="nav-link" href="javascript:document.LogoutForm.submit()">Wyloguj się</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mt-5">
+            <div class="form-group">
+                <label style="font-size:30px" th:inline="text">Witaj <a
+                        style="color:lightskyblue; text-transform:capitalize"><b
+                        sec:authentication="principal.username"></b></a>
+                    na stronie głównej!</label>
+                <div style="font-size:20px;">Jeśli chcesz się wylogować, wybierz przycisk wyloguj pod tym
+                    tekstem.
+                </div>
+            </div>
+            <form method="post" th:action="@{/logout}">
+                <div style="margin-top:10px">
+                    <button class="btn btn-primary" type="submit" value="Wyloguj się">Wyloguj się</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<div class="row mt-5">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Dane mieszkańca</h4>
+            </div>
+            <div class="card-body">
+                <p><b>Imię:</b> <span th:text="${profile.imieMieszkanca}"></span></p>
+                <p><b>Nazwisko:</b> <span th:text="${profile.nazwiskoMieszkanca}"></span></p>
+                <p><b>Email:</b> <span th:text="${profile.adresEmail}"></span></p>
+                <p><b>Telefon:</b> <span th:text="${profile.numerKontaktowy}"></span></p>
+                <p><b>PESEL:</b> <span th:text="${profile.pesel}"></span></p>
+                <p><b>Wiek:</b> <span th:text="${profile.wiek}"></span></p>
+                <p><b>Stan cywilny:</b> <span th:text="${profile.stanCywilny}"></span></p>
+                <p><b>Płeć:</b> <span th:text="${profile.plec}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">Zmień dane kontaktowe</h4>
+            </div>
+            <div class="card-body">
+
+                <form th:action="@{/user/update-contact}" method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label">Numer telefonu</label>
+                        <input type="text"
+                               name="numerKontaktowy"
+                               class="form-control"
+                               th:value="${profile.numerKontaktowy}"
+                               required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Adres email</label>
+                        <input type="email"
+                               name="adresEmail"
+                               class="form-control"
+                               th:value="${profile.adresEmail}"
+                               required />
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        Zapisz zmiany
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Dane lokalu</h4>
+            </div>
+            <div class="card-body">
+                <p><b>Numer w budynku:</b> <span th:text="${profile.numerWBudynku}"></span></p>
+                <p><b>Piętro:</b> <span th:text="${profile.nrPietra}"></span></p>
+                <p><b>Liczba pokoi:</b> <span th:text="${profile.liczbaPokoi}"></span></p>
+                <p><b>Metraż:</b> <span th:text="${profile.metraz}"></span> m²</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
